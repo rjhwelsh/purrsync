@@ -1,0 +1,41 @@
+@startuml
+
+class set {
+ union()
+ intersection()
+ difference()
+ symmetric_difference()
+}
+
+class FileSet {
+ - File: file
+ - Path: root
+ - Method: updateFunc
+ + setRoot(Path: root)
+ + getRoot()
+ + readFile()
+ + writeFile()
+ + updateSet()
+}
+
+set <|-- FileSet
+
+class Rsync {
+ - FileSet: mainSet
+ - FileSet: ignoreSet
+ - FileSet: packageSet
+ - FileSet: orphanSet
+ - Path: rsync
+ - List: rsyncArgs
+ + rsync(Str: rsyncArgs)
+ + rsync()
+ + rsyncMain()
+ + rsyncPackage(Str: PackageName)
+}
+
+Rsync "1" o- "1" FileSet : mainSet
+Rsync "1" o- "1" FileSet : ignoreSet
+Rsync "1" o- "n" FileSet : packageSet
+Rsync "1" o- "1" FileSet : orphanSet
+
+@enduml
