@@ -1,12 +1,19 @@
 @startuml
+skinparam nodesep 10
 
+package std {
 class set {
  union()
  intersection()
  difference()
  symmetric_difference()
 }
+class "subprocess" as sc {
+   + call()
+}
+}
 
+package parsync {
 class FileSet {
  - File: file
  - Path: root
@@ -17,7 +24,7 @@ class FileSet {
  + writeFile()
  + updateSet()
 }
-
+sc <.. FileSet : call
 set <|-- FileSet
 
 class Rsync {
@@ -32,10 +39,12 @@ class Rsync {
  + rsyncMain()
  + rsyncPackage(Str: PackageName)
 }
+sc <.. Rsync : call
 
 Rsync "1" o- "1" FileSet : mainSet
 Rsync "1" o- "1" FileSet : ignoreSet
 Rsync "1" o- "n" FileSet : packageSet
 Rsync "1" o- "1" FileSet : orphanSet
+}
 
 @enduml
