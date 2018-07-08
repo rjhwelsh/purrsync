@@ -1,0 +1,49 @@
+@startuml
+  skinparam nodesep 10
+	skinparam ranksep 10
+	left to right direction
+
+	:admin: as a1
+	:cron: as a2
+	:ssh: as a3
+
+	rectangle parsync {
+						( View config history ) as uc1
+						( by package ) as uc1.1
+						( by host ) as uc1.2
+						( by date ) as uc1.3
+						uc1 <|-- uc1.1
+						uc1 <|-- uc1.2
+						uc1 <|-- uc1.3
+
+						( Create file list ) as uc2
+						( Find files ) as uc2.1
+						( Files from stream ) as uc2.2
+						( Files from system command ) as uc2.3
+						( Files from file list ) as uc2.4
+						uc2 ..> uc2.1 : <<extend>>
+						uc2 ..> uc2.2 : <<extend>>
+						uc2 ..> uc2.3 : <<extend>>
+						uc2 ..> uc2.4 : <<extend>>
+
+						( Rsync files ) as uc3
+						( by package ) as uc3.1
+						( by host ) as uc3.2
+						( by date ) as uc3.3
+						uc3 <|-- uc3.1
+						uc3 <|-- uc3.2
+						uc3 <|-- uc3.3
+
+						uc3 .> uc2 : <<include>>
+						}
+
+	a1 -- uc1
+	a1 -- uc2
+	a1 -- uc3
+
+	a2 -- uc2
+	a2 -- uc3
+
+	a3 -- uc3
+
+@enduml
