@@ -6,16 +6,16 @@ import os
 
 
 class FileSet(set):
-    def __init__(self, filename=None, cmd=None, root=None):
+    def __init__(self, filename=None, updatefn=None, root=None):
         """ Initialize FileSet
         Args:
             filename (str): Filename to read/write to.
-            cmd (method): Command to update filelist.
+            updatefn (method): Command to update filelist.
             root (str): Root prefix for relative paths.
 
         """
         self.filename = filename
-        self.cmd = cmd
+        self.updatefn = updatefn
         self.root = root
 
     def read(self):
@@ -31,3 +31,11 @@ class FileSet(set):
         strings.sort()
         with open(self.filename, 'w') as f:
             f.write(os.linesep.join(strings))
+
+    def fnupdate(self):
+        """
+        Executes the updatefn function to update the list.
+        """
+        for i in self.updatefn():
+            self.add(i)
+        return set(self)

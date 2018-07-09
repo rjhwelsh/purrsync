@@ -13,7 +13,7 @@ class TestFileSet(unittest.TestCase):
     def test_Init(self):
         fs1 = FileSet.FileSet()
         self.assertEqual(fs1.filename, None)
-        self.assertEqual(fs1.cmd, None)
+        self.assertEqual(fs1.updatefn, None)
         self.assertEqual(fs1.root, None)
 
     def test_SetBasic(self):
