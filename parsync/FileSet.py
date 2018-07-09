@@ -19,6 +19,9 @@ class FileSet(set):
         self.root = root
 
     def read(self):
+        """
+        Reads file into set.
+        """
         with open(self.filename, 'r') as f:
             lines = f.read().splitlines()
         lineset = set(lines)
@@ -27,6 +30,9 @@ class FileSet(set):
         return set(self)
 
     def write(self):
+        """
+        Writes FileSet to filename.
+        """
         strings = list(self)
         strings.sort()
         with open(self.filename, 'w') as f:
