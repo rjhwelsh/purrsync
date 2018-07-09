@@ -24,3 +24,7 @@ class TestRsync(unittest.TestCase):
         self.assertEqual(rs1.ignoreSet, i1)
         self.assertEqual(rs1.packageSet, p1)
         self.assertEqual(rs1.rsyncArgs, rA)
+
+    def test_which(self):
+        rs1 = Rsync.Rsync()
+        self.assertEqual(rs1.which(), "/usr/bin/rsync")
