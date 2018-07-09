@@ -67,16 +67,18 @@ class Rsync:
         """ Rsyncs main set. """
         with tempfile.NamedTemporaryFile(mode='r') as syncCacheFile:
             syncSet = self.mainSet - self.ignoreSet
-            syncFileSet = FileSet.FileSet(
-                setIter=syncSet,
-                filename=syncCacheFile.name)
+            syncSet.filename = syncCacheFile.name
+            syncSet.write()
 
             src = self.source
             dest = os.path.join(self.destination,
                                 self.MAIN,
                                 self.ROOT)
 
-            syncFileSet.write()
+            return self.rsync(syncCacheFile.name,
+                              src,
+                              dest)
+
             return self.rsync(syncCacheFile.name,
                               src,
                               dest)
