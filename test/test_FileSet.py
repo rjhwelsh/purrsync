@@ -76,6 +76,13 @@ class TestFileSet(unittest.TestCase):
         self.assertEqual(fs1.read(),
                          set({'0', '1', '2', '3', '5'}))
 
+    def test_root(self):
+        fs1 = FileSet.FileSet(root='/')
+        fs1.add('./somefile.txt')
+        fs1.add('somefile.txt')
+        fs1.add('/somefile.txt')
+        self.assertEqual(len(fs1.read()), 1)
+
 
 if __name__ == '__main__':
     unittest.main()

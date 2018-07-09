@@ -27,7 +27,8 @@ class FileSet(set):
                 lines = f.read().splitlines()
                 lineset = set(lines)
             self.update(lineset)
-        return set(self)
+        return set({self.__path(item)
+                    for item in self})
 
     def write(self):
         """
@@ -49,3 +50,14 @@ class FileSet(set):
                     'Received {} instead!'.format(type(i)))
             self.add(i)
         return set(self)
+
+    def __path(self, pathstring):
+        """
+        Returns the filepath joined with root (prefix)
+        If root is None, the pathstring is unmodified.
+        """
+        if isinstance(self.root, type(None)):
+            return pathstring
+        return os.path.normpath(
+            os.path.join(
+                self.root, pathstring))
