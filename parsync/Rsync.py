@@ -11,6 +11,7 @@ import parsync.FileSet as FileSet
 
 class Rsync:
     def __init__(self,
+                 destination="./",
                  mainSet=FileSet.FileSet(),
                  ignoreSet=FileSet.FileSet(),
                  packageSet=dict(),
@@ -19,6 +20,7 @@ class Rsync:
         """
         This class provides an interface to rsync w/ filesets.
         """
+        self.destination = destination
         self.mainSet = mainSet
         self.ignoreSet = ignoreSet
         self.packageSet = packageSet
