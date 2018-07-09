@@ -46,6 +46,23 @@ class Rsync:
                       stdout=sp.PIPE) as proc:
             return proc.stdout.read().decode(
                 "utf-8").rstrip(os.linesep)
+
+    def rsync(self,
+              filelist,
+              src,
+              dest
+              ):
+        """ Uses rsync to synchronize files based on filelists. """
+        filesfrom = "--files-from=" + filelist
+        with sp.Popen([self.rsyncBin,
+                       self.rsyncArgs,
+                       filesfrom,
+                       src,
+                       dest],
+                      stdout=sp.PIPE) as proc:
+            return proc.stdout.read().decode(
+                "utf-8").rstrip(os.linesep)
+
     def rsyncMain(self):
         """ Rsyncs main set. """
         with tempfile.NamedTemporaryFile(mode='r') as syncCacheFile:
@@ -58,5 +75,12 @@ class Rsync:
                 setIter=syncSet,
                 filename=syncCacheFile.name)
 
+            src = self.source
+            dest = os.path.join(self.destination,
+                                self.MAIN,
+                                self.ROOT)
+
             syncFileSet.write()
-            return self.rsync(syncCacheFile.name)
+            return self.rsync(syncCacheFile.name,
+                              src,
+                              dest)
