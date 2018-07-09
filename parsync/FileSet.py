@@ -6,7 +6,7 @@ import os
 
 
 class FileSet(set):
-    def __init__(self, filename=None, updatefn=None, root=None):
+    def __init__(self, setIter=set(), filename=None, updatefn=None, root=None):
         """ Initialize FileSet
         Args:
             filename (str): Filename to read/write to.
@@ -14,6 +14,10 @@ class FileSet(set):
             root (str): Root prefix for relative paths.
 
         """
+
+        self.clear()
+        self.update(setIter)
+
         self.filename = filename
         self.updatefn = updatefn
         self.root = root
