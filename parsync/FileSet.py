@@ -173,7 +173,7 @@ class PackageSource(dict):
 
         # Initialize dict
         for pkg in pkglist:
-            self.addP(pkg)
+            self.add(pkg)
 
     def add(self, pkg):
         root = self.root
