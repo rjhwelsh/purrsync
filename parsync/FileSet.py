@@ -68,7 +68,8 @@ class FileSet(set):
             return pathstring
         return os.path.normpath(
             os.path.join(
-                self.root, pathstring))
+                os.path.normpath(self.root),
+                os.path.normpath(pathstring)))
 
     def __relpath(self, pathstring):
         """
