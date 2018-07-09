@@ -39,6 +39,7 @@ class TestFileSet(unittest.TestCase):
 
         self.assertEqual(fs1.union(fs2), fs1)
         self.assertEqual(fs1.difference(fs2), fs3)
+        self.assertEqual(fs1.intersection(fs2), fs2)
 
     def test_FileOps(self):
         with tempfile.NamedTemporaryFile(mode='r',
