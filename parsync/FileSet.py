@@ -69,3 +69,25 @@ class FileSet(set):
         return os.path.normpath(
             os.path.join(
                 self.root, pathstring))
+
+    def __relpath(self, pathstring):
+        """
+        Returns a pathstring after removing root.
+        If root is not present, an error will be raised.
+        If root is None, the pathstring is unmodified.
+        """
+        if isinstance(self.root, type(None)):
+            return pathstring
+
+        norm_root = os.path.normpath(self.root)
+        norm_path = os.path.normpath(pathstring)
+
+        norm_path_stripped = norm_path.lstrip(norm_root)
+
+        if (norm_path_stripped < norm_path
+                or norm_root == os.sep):
+            return norm_path_stripped
+        else:
+            raise ValueError('Could not lstrip "{}" from "{}"'.format(
+                norm_root, norm_path))
+
