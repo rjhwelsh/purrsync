@@ -119,7 +119,7 @@ class FileSet(set):
 
     def copy(self):
         """ Returns a copy of FileSet. """
-        return FileSet(setIter=set(self),
+        return FileSet(setIter=self.__set__(),
                        filename=None,
                        updatefn=self.updatefn,
                        root=self.root)
@@ -127,7 +127,7 @@ class FileSet(set):
     def __eq__(self, other):
         if (self.root == other.root and
                 self.updatefn == other.updatefn and
-                set(self) == set(other)):
+                self.__set__() == other.__set__()):
             return True
         else:
             return False
@@ -137,7 +137,8 @@ class FileSet(set):
 
     def __set__(self):
         """ Returns a plain set of FileSet. """
-        return set({item for item in self})
+        return set({self.__relpath(item)
+                    for item in self})
 
     def __or__(self, other):
         return self.union(other)
