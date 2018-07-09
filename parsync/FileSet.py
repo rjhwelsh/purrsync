@@ -138,4 +138,13 @@ class FileSet(set):
         """ Returns a plain set of FileSet. """
         return set({item for item in self})
 
+    def __or__(self, other):
+        return self.union(other)
+
+    def __and__(self, other):
+        return self.intersection(other)
+
+    def __sub__(self, other):
+        return self.difference(other)
+
 
