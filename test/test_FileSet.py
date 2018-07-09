@@ -5,6 +5,7 @@
 import unittest
 import tempfile
 import os
+import subprocess as sp
 import parsync.FileSet as FileSet
 
 
@@ -129,6 +130,43 @@ class TestFileSet(unittest.TestCase):
         fs1.add('somefile.txt')
         fs1.add('/somefile.txt')
         self.assertEqual(len(fs1.read()), 1)
+
+
+class TestPackageSource(unittest.TestCase):
+    def test_qfile(self):
+        def qfile(src):
+            with sp.Popen(["qfile {} | awk '{{print $1}}'".format(src)],
+                          shell=True,
+                          stdout=sp.PIPE) as proc:
+                return proc.stdout.read().decode(
+                    "utf-8").rstrip(os.linesep).split(os.linesep)
+
+        def qlist(pkg):
+            with sp.Popen(["qlist {}".format(pkg)],
+                          shell=True,
+                          stdout=sp.PIPE) as proc:
+                return proc.stdout.read().decode(
+                    "utf-8").rstrip(os.linesep).split(os.linesep)
+
+        package = qfile("/bin/bash")[0]
+        packageFiles = qlist(package)
+        self.assertEqual(package, "app-shells/bash")
+        self.assertIn("/bin/bash", packageFiles)
+
+        fs0 = FileSet.FileSet(root='/',
+                              setIter=set())
+        fs1 = FileSet.FileSet(root='/',
+                              setIter=set({"/bin/bash"}))
+        fsp = FileSet.FileSet(root='/',
+                              setIter=packageFiles)
+        fsp2 = FileSet.FileSet(root='/',
+                               setIter=set({"/bin/zsh"}))
+
+        self.assertIn('/bin/bash', fs1)
+        self.assertEqual(fs1 & fsp, fs1)
+        self.assertEqual(fs1 | fsp, fsp)
+
+        self.assertEqual(fs1 & fsp2, fs0)
 
 
 if __name__ == '__main__':

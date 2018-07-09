@@ -150,3 +150,45 @@ class FileSet(set):
         return self.difference(other)
 
 
+class PackageSource(dict):
+    def __init__(self,
+                 pkglist=list(),
+                 dirname=None,
+                 pkgfn=None,
+                 root=None):
+        """
+        Initialize PackageSource
+        Args:
+            pkglist (iter) : An iterable producing package names.
+            dirname (str)  : A directory to store package filelists.
+            pkgfn (method) : A function returning an iterable for a package.
+        I.e. updatefn=pkgfn(package)
+            root (str)     : Root prefix for relative paths.
+        """
+        self.clear()
+        self.pkglist = pkglist
+        self.dirname = dirname
+        self.pkgfn = pkglist
+        self.root = root
+
+        # Initialize dict
+        for pkg in pkglist:
+            self.addP(pkg)
+
+    def add(self, pkg):
+        root = self.root
+        updatefn = self.pkgfn(pkg)
+
+        if isinstance(self.dirname, type(None)):
+            dirname = "."
+        else:
+            dirname = self.dirname
+        filename = os.path.join(dirname, pkg)
+
+        self[pkg] = FileSet(filename=filename,
+                            updatefn=updatefn,
+                            root=root)
+        return self[pkg]
+
+    def remove(self, pkg):
+        return self.pop(pkg)
