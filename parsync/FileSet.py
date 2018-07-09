@@ -192,3 +192,22 @@ class PackageSource(dict):
 
     def remove(self, pkg):
         return self.pop(pkg)
+
+    def read(self):
+        """
+        Reads packages from directory.
+        All files in dirname are considered to be packages file lists.
+
+        """
+
+        # Add packages from `dirname`
+        for dirpath, dirnames, filenames in os.walk(self.dirname):
+            for name in filenames:
+                fullname = os.path.join(dirpath, name)
+                name_stripped = fullname.lstrip(self.dirname)
+                if name_stripped not in self:
+                    self.add(name_stripped)
+
+        # Read package data
+        for pkgSet in self.values():
+            pkgSet.read()
