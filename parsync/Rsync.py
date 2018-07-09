@@ -10,6 +10,13 @@ import parsync.FileSet as FileSet
 
 
 class Rsync:
+    # Pathname constants
+    MAIN = "main"
+    PACKAGE = "pkg"
+    ORPHAN = "orphan"
+    ROOT = "root"
+    BACKUP = "backup"
+
     def __init__(self,
                  destination="./",
                  mainSet=FileSet.FileSet(),
