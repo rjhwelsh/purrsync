@@ -66,11 +66,7 @@ class Rsync:
     def rsyncMain(self):
         """ Rsyncs main set. """
         with tempfile.NamedTemporaryFile(mode='r') as syncCacheFile:
-
-            mainSet = self.mainSet.read()
-            ignoreSet = self.ignoreSet.read()
-            syncSet = mainSet - ignoreSet
-
+            syncSet = self.mainSet - self.ignoreSet
             syncFileSet = FileSet.FileSet(
                 setIter=syncSet,
                 filename=syncCacheFile.name)
