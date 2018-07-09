@@ -18,6 +18,7 @@ class Rsync:
     BACKUP = "backup"
 
     def __init__(self,
+                 source="/",
                  destination="./",
                  mainSet=FileSet.FileSet(),
                  ignoreSet=FileSet.FileSet(),
@@ -27,6 +28,7 @@ class Rsync:
         """
         This class provides an interface to rsync w/ filesets.
         """
+        self.source = source
         self.destination = destination
         self.mainSet = mainSet
         self.ignoreSet = ignoreSet
