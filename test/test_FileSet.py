@@ -50,6 +50,32 @@ class TestFileSet(unittest.TestCase):
                     'manually_added_file.txt',
                     'somefile.txt'}))
 
+    def test_fnupdate(self):
+        def fibonacci(n):
+            """ A generator for fibonacci numbers. """
+            a, b, counter = 0, 1, 0
+            while True:
+                if (counter > n):
+                    return
+                yield a
+                a, b = b, a + b
+                counter += 1
+
+        def fibonacciString(n):
+            """ A generator for fibonacci strings. """
+            for f in fibonacci(n):
+                yield(str(f))
+
+        fs1 = FileSet.FileSet(updatefn=fibonacci(5))
+        with self.assertRaises(TypeError):
+            fs1.fnupdate()
+            fs1.read()
+
+        fs1.updatefn = fibonacciString(5)
+        fs1.fnupdate()
+        self.assertEqual(fs1.read(),
+                         set({'0', '1', '2', '3', '5'}))
+
 
 if __name__ == '__main__':
     unittest.main()

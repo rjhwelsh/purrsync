@@ -42,6 +42,10 @@ class FileSet(set):
         """
         Executes the updatefn function to update the list.
         """
-        for i in self.updatefn():
+        for i in self.updatefn:
+            if not isinstance(i, str):
+                raise TypeError(
+                    'Output of self.updatefn must be a string! ' +
+                    'Received {} instead!'.format(type(i)))
             self.add(i)
         return set(self)
