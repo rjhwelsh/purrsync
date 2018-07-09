@@ -35,6 +35,20 @@ class TestFileSet(unittest.TestCase):
             expectedString = fp.read()
             self.assertEqual(expectedString, 'anotherfile.txt\nsomefile.txt')
 
+    def test_FileClobber(self):
+        with tempfile.NamedTemporaryFile(mode='r',
+                                         newline=os.linesep) as fp:
+            with open(fp.name, 'w') as fpw:
+                fpw.write('manually_added_file.txt')
+
+            fs1 = FileSet.FileSet(filename=fp.name)
+            fs1.add('somefile.txt')
+
+            self.assertEqual(
+                fs1.read(),
+                set({
+                    'manually_added_file.txt',
+                    'somefile.txt'}))
 
 
 if __name__ == '__main__':

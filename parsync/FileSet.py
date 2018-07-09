@@ -25,7 +25,6 @@ class FileSet(set):
         with open(self.filename, 'r') as f:
             lines = f.read().splitlines()
         lineset = set(lines)
-        self.clear()
         self.update(lineset)
         return set(self)
 
