@@ -22,10 +22,11 @@ class FileSet(set):
         """
         Reads file into set.
         """
-        with open(self.filename, 'r') as f:
-            lines = f.read().splitlines()
-        lineset = set(lines)
-        self.update(lineset)
+        if not isinstance(self.filename, type(None)):
+            with open(self.filename, 'r') as f:
+                lines = f.read().splitlines()
+                lineset = set(lines)
+            self.update(lineset)
         return set(self)
 
     def write(self):
