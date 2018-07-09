@@ -99,6 +99,20 @@ class Rsync:
                     src,
                     dest))
 
+    def rsyncOrphans(self):
+        """ Rsyncs orphaned files. """
+        mainSet = self.mainSet - self.ignoreSet
+        orphanSet = self.mainSet - self.ignoreSet
+        for pSet in self.packageSet.values():
+            orphanSet = orphanSet - (mainSet & pSet)
+
+        with tempfile.NamedTemporaryFile(mode='r') as syncCacheFile:
+            orphanSet.filename = syncCacheFile.name
+            orphanSet.write()
+            src = self.source
+            dest = os.path.join(self.destination,
+                                self.ORPHAN,
+                                self.ROOT)
             return self.rsync(syncCacheFile.name,
                               src,
                               dest)
