@@ -79,6 +79,26 @@ class Rsync:
                               src,
                               dest)
 
+    def rsyncPackages(self):
+        """ Rsyncs packages. """
+        mainSet = self.mainSet - self.ignoreSet
+        for name, pSet in self.packageSet.items():
+            with tempfile.NamedTemporaryFile(mode='r') as syncCacheFile:
+                syncSet = mainSet & pSet
+                syncSet.filename = syncCacheFile.name
+                syncSet.write()
+
+                src = self.source
+                dest = os.path.join(self.destination,
+                                    self.PACKAGE,
+                                    name,
+                                    self.ROOT)
+
+                yield (name, self.rsync(
+                    syncCacheFile.name,
+                    src,
+                    dest))
+
             return self.rsync(syncCacheFile.name,
                               src,
                               dest)
