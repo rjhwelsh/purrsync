@@ -119,7 +119,7 @@ class FileSet(set):
     def copy(self):
         """ Returns a copy of FileSet. """
         return FileSet(setIter=set(self),
-                       filename=self.filename,
+                       filename=None,
                        updatefn=self.updatefn,
                        root=self.root)
 
