@@ -15,7 +15,7 @@ class Rsync:
                  ignoreSet=FileSet.FileSet(),
                  packageSet=dict(),
                  rsyncBin="",
-                 rsyncArgs=""):
+                 rsyncArgs=list()):
         """
         This class provides an interface to rsync w/ filesets.
         """
@@ -24,6 +24,10 @@ class Rsync:
         self.packageSet = packageSet
         self.rsyncArgs = rsyncArgs
         self.rsyncBin = rsyncBin
+
+        # Override
+        if not rsyncBin:
+            self.rsyncBin = self.which()
 
     def which(self):
         """ Returns which rsync is being used by the system. """
