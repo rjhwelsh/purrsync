@@ -91,3 +91,51 @@ class FileSet(set):
             raise ValueError('Could not lstrip "{}" from "{}"'.format(
                 norm_root, norm_path))
 
+    # Override Methods
+    def union(self, *others):
+        newSet = self.copy()
+        for s in others:
+            newSet.update(
+                set({self.__relpath(i)
+                     for i in s.normpath()}))
+        return newSet
+
+    def intersection(self, *others):
+        newSet = self.copy()
+        for s in others:
+            newSet.intersection_update(
+                set({self.__relpath(i)
+                     for i in s.normpath()}))
+        return newSet
+
+    def difference(self, *others):
+        newSet = self.copy()
+        for s in others:
+            newSet.difference_update(
+                set({self.__relpath(i)
+                     for i in s.normpath()}))
+        return newSet
+
+    def copy(self):
+        """ Returns a copy of FileSet. """
+        return FileSet(setIter=set(self),
+                       filename=self.filename,
+                       updatefn=self.updatefn,
+                       root=self.root)
+
+    def __eq__(self, other):
+        if (self.root == other.root and
+                self.updatefn == other.updatefn and
+                set(self) == set(other)):
+            return True
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __set__(self):
+        """ Returns a plain set of FileSet. """
+        return set({item for item in self})
+
+

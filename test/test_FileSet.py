@@ -22,6 +22,24 @@ class TestFileSet(unittest.TestCase):
         fs1.add('somefile.txt')
         self.assertEqual(len(fs1), 1)
 
+    def test_SetOperators(self):
+        set1 = set({'somefile.txt',
+                    'anotherfile.txt'})
+        set2 = set({'somefile.txt'})
+        set3 = set1 - set2
+
+        fs1 = FileSet.FileSet(setIter=set1, root='/')
+        fs2 = FileSet.FileSet(setIter=set2, root='/')
+        fs3 = FileSet.FileSet(setIter=set3, root='/')
+        fs1a = FileSet.FileSet(setIter=set1, root='/etc')
+
+        self.assertNotIsInstance(fs1.__set__(), type(fs1))
+
+        self.assertNotEqual(fs1, fs1a)
+
+        self.assertEqual(fs1.union(fs2), fs1)
+        self.assertEqual(fs1.difference(fs2), fs3)
+
     def test_FileOps(self):
         with tempfile.NamedTemporaryFile(mode='r',
                                          newline=os.linesep) as fp:
