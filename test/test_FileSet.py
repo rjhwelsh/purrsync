@@ -44,6 +44,31 @@ class TestFileSet(unittest.TestCase):
         self.assertEqual(fs1.intersection(fs2), fs2)
         self.assertEqual(fs1 & fs2, fs2)
 
+    def test_SetOperatorsOverRoot(self):
+        set1 = set({'./somefile.txt'})
+        set2 = set({'./somefile.txt',
+                    './anotherfile.txt'})
+        set3 = set({'etc/somefile.txt',
+                    'var/anotherfile.txt',
+                    'var/somefile.txt'})
+
+        fs0 = FileSet.FileSet(setIter=set(), root='/')
+        fs1 = FileSet.FileSet(setIter=set1, root='/etc')
+        fs2 = FileSet.FileSet(setIter=set2, root='/var')
+        fs3 = FileSet.FileSet(setIter=set3, root='/')
+        fs4 = fs0 | fs1 | fs2
+
+        with self.assertRaises(ValueError):
+            fs1 | fs2
+
+        self.assertIn('/etc/somefile.txt', fs1.normpath())
+
+        self.assertEqual(fs3.root, fs4.root)
+        self.assertEqual(fs3.updatefn, fs4.updatefn)
+
+        self.assertEqual(fs3.__set__(), fs4.__set__())
+        self.assertEqual(fs3, fs4)
+
     def test_FileOps(self):
         with tempfile.NamedTemporaryFile(mode='r',
                                          newline=os.linesep) as fp:
