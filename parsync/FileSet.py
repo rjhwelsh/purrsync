@@ -31,8 +31,7 @@ class FileSet(set):
                 lines = f.read().splitlines()
                 lineset = set(lines)
             self.update(lineset)
-        return set({self.__path(item)
-                    for item in self})
+        return self.normpath()
 
     def write(self):
         """
@@ -54,6 +53,11 @@ class FileSet(set):
                     'Received {} instead!'.format(type(i)))
             self.add(i)
         return set(self)
+
+    def normpath(self):
+        """ Returns the set with normalized paths."""
+        return set({self.__path(item)
+                    for item in self})
 
     def __path(self, pathstring):
         """
