@@ -1,0 +1,47 @@
+@startuml
+
+title "Rsync Data Structure in Destination"
+skinparam nodesep 10
+left to right direction
+
+ folder dest as d {
+ 				folder main as m
+ 				folder package as p {
+							 folder category1
+							 folder category2
+							 folder category3
+							 folder category as c {
+							 				folder package1
+							 				folder package2
+							 				folder package as q {
+							 								folder version as v
+							 											}
+							 }
+				}
+ 				folder orphan as o
+ }
+
+folder "" as mm {
+			 folder root as r {
+			 				artifact etc as r1
+							artifact var as r2
+							artifact "..." as r3
+							}
+			folder backup as b {
+						 folder "YYYY-MM-DD-HH:MM" {
+						 				artifact etc as b1
+										artifact var as b2
+										artifact "..." as b3
+						 }
+						 folder "YYYY-MM-DD-HH:M1"
+						 folder "YYYY-MM-DD-HH:M2"
+
+			}
+}
+
+v ... mm
+m ... mm
+o ... mm
+
+
+@enduml
