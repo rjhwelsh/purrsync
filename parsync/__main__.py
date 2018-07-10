@@ -2,9 +2,12 @@
 
 # Copyright (c) 2018 Roger Welsh <rjhwelsh@gmail.com>
 
+import os
 import argparse
 import subprocess as sp
 
+import FileSet
+import Rsync
 
 
 def main():
@@ -125,6 +128,37 @@ def main():
     if args.alt_root:
         root = args.alt_root
 
+    mainSet = FileSet.FileSet(
+        filename=args.main_file,
+        updatefn=main_update,
+        root=root)
+    mainSet.read()
+    mainSet.fnupdate()
+
+    ignoreSet = FileSet.FileSet(
+        filename=args.ignore_file,
+        updatefn=ignore_update,
+        root=root)
+    ignoreSet.read()
+    ignoreSet.fnupdate()
+
+    packageSet = dict()
+    if args.package:
+        packageSet = FileSet.PackageSource(
+            pkglist=package_list_update,
+            dirname=args.package_dir,
+            pkgfn=pkgfn,
+            root=root)
+        packageSet.read()
+        packageSet.fnupdate()
+
+    rsyncInstance = Rsync.Rsync(source=args.source,
+                                destination=args.destination,
+                                mainSet=mainSet,
+                                ignoreSet=ignoreSet,
+                                packageSet=packageSet,
+                                rsyncBin=args.rsyncBin,
+                                rsyncArgs=args.rsyncArgs)
 
 def updateIter(execstring):
     """ Generates an iterable for shell execstring. """
