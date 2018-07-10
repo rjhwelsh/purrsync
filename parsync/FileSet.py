@@ -207,8 +207,10 @@ class PackageSource(dict):
                     self.add(name_ripped)
 
         # Read package data
+    def fnupdate(self):
+        # Update packages
         for pkgSet in self.values():
-            pkgSet.read()
+            pkgSet.fnupdate()
 
 
 def removePrefix(pathstring, root):
