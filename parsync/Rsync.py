@@ -6,7 +6,7 @@ import subprocess as sp
 import os
 import tempfile
 
-import parsync.FileSet as FileSet
+import FileSet
 
 
 class Rsync:
