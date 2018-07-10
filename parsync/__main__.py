@@ -87,15 +87,43 @@ def main():
         metavar='RSYNC_ARGS',
         type=str,
         nargs='?',
+        default=str(),
         help='Use these arguments with rsync.')
     parser.add_argument(
         '-B', '--rsync-bin',
         metavar='RSYNC_BIN',
         type=str,
         nargs='?',
+        default=str(),
         help='Specify an alternative path to rsync binary.')
 
-    # parser.parse_args()
+    args = parser.parse_args()
+
+    main_update = []
+    if args.main_exec:
+        main_update = updateIter(
+            args.main_exec)
+
+    ignore_update = []
+    if args.ignore_exec:
+        ignore_update = updateIter(
+            args.ignore_exec)
+
+    package_list_update = []
+    if args.package_list_exec:
+        package_list_update = updateIter(
+            args.package_list_exec)
+
+    pkgfn = None
+    if args.package_exec:
+        def pkgfn(package):
+            return updateIter(
+                args.package_exec.format(
+                    package))
+
+    root = args.source
+    if args.alt_root:
+        root = args.alt_root
 
 
 def updateIter(execstring):
