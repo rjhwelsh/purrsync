@@ -211,6 +211,9 @@ class PackageSource(dict):
 
 def removePrefix(pathstring, root):
     if pathstring.startswith(root):
+        # Trailing slash
+        if not root[-1] == os.sep:
+            root += os.sep
         return pathstring[len(root):]
     elif root == os.sep:
         # Exception for absroot
