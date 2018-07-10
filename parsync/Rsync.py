@@ -55,14 +55,11 @@ class Rsync:
         """ Uses rsync to synchronize files based on filelists. """
         filesfrom = "--files-from=" + filelist
 
-        with sp.Popen([self.rsyncBin] +
-                      self.rsyncArgs.split() +
-                      [filesfrom,
-                       src,
-                       dest],
-                      stdout=sp.PIPE) as proc:
-            return proc.stdout.read().decode(
-                "utf-8").rstrip(os.linesep)
+        return sp.Popen([self.rsyncBin] +
+                        self.rsyncArgs.split() +
+                        [filesfrom,
+                         src,
+                         dest])
 
     def rsyncMain(self):
         """ Rsyncs main set. """
@@ -76,14 +73,16 @@ class Rsync:
                                 self.MAIN,
                                 self.ROOT)
 
-            return self.rsync(syncCacheFile.name,
+            proc = self.rsync(syncCacheFile.name,
                               src,
                               dest)
+            proc.communicate()
+        return proc
 
     def rsyncPackages(self):
         """ Rsyncs packages. """
         mainSet = self.mainSet - self.ignoreSet
-        for name, pSet in self.packageSet.items():
+        for pkgName, pSet in self.packageSet.items():
             with tempfile.NamedTemporaryFile(mode='r') as syncCacheFile:
                 syncSet = mainSet & pSet
                 syncSet.filename = syncCacheFile.name
@@ -92,13 +91,15 @@ class Rsync:
                 src = self.source
                 dest = os.path.join(self.destination,
                                     self.PACKAGE,
-                                    name,
+                                    pkgName,
                                     self.ROOT)
-
-                yield (name, self.rsync(
+                proc = self.rsync(
                     syncCacheFile.name,
                     src,
-                    dest))
+                    dest)
+                proc.communicate()
+
+                yield (pkgName, proc)
 
     def rsyncOrphans(self):
         """ Rsyncs orphaned files. """
@@ -114,9 +115,11 @@ class Rsync:
             dest = os.path.join(self.destination,
                                 self.ORPHAN,
                                 self.ROOT)
-            return self.rsync(syncCacheFile.name,
+            proc = self.rsync(syncCacheFile.name,
                               src,
                               dest)
+            proc.communicate()
+        return proc
 
     def prepareDest(self, main=True, package=True, orphan=True):
         """ Prepares destination directory for rsync. """
