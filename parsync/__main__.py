@@ -3,6 +3,8 @@
 # Copyright (c) 2018 Roger Welsh <rjhwelsh@gmail.com>
 
 import argparse
+import subprocess as sp
+
 
 
 def main():
@@ -95,7 +97,18 @@ def main():
 
     # parser.parse_args()
 
-    print(parser.parse_args())
+
+def updateIter(execstring):
+    """ Generates an iterable for shell execstring. """
+    proc = sp.Popen(execstring,
+                    shell=True,
+                    stdout=sp.PIPE)
+    for item in proc.stdout.read(
+    ).decode(
+        "utf-8").rstrip(
+            os.linesep).split(
+                os.linesep):
+        yield item
 
 
 if __name__ == '__main__':
