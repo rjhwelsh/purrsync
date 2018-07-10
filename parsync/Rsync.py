@@ -116,3 +116,60 @@ class Rsync:
             return self.rsync(syncCacheFile.name,
                               src,
                               dest)
+
+    def prepareDest(self, main=True, package=True, orphan=True):
+        """ Prepares destination directory for rsync. """
+        # NB. This probably won't work on Windows Systems.
+        if self.__isSshDest():
+            return self.__prepareSshDest(main, package, orphan)
+        else:
+            return self.__prepareLocalDest(main, package, orphan)
+
+    def __isSshDest(self):
+        root = self.destination.split(os.sep)[0]
+        if root:
+            return root[-1] == ":"
+        else:
+            return False
+
+    def __prepareLocalDest(self,
+                           main,
+                           package,
+                           orphan):
+        DEST = self.destination
+        DEST_MAIN = os.path.join(DEST, self.MAIN)
+        DEST_MAIN_ROOT = os.path.join(DEST_MAIN, self.ROOT)
+        DEST_ORPHAN = os.path.join(DEST, self.ORPHAN)
+        DEST_ORPHAN_ROOT = os.path.join(DEST_ORPHAN, self.ROOT)
+        DEST_PACKAGE = os.path.join(DEST, self.PACKAGE)
+        if not os.path.isdir(DEST):
+            raise ValueError("DEST must exist and be a directory!")
+
+        if main:
+            if not os.path.isdir(DEST_MAIN):
+                os.mkdir(DEST_MAIN)
+            if not os.path.isdir(DEST_MAIN_ROOT):
+                os.mkdir(DEST_MAIN_ROOT)
+
+        if orphan:
+            if not os.path.isdir(DEST_ORPHAN):
+                os.mkdir(DEST_ORPHAN)
+            if not os.path.isdir(DEST_ORPHAN_ROOT):
+                os.mkdir(DEST_ORPHAN_ROOT)
+
+        if package:
+            if not os.path.isdir(DEST_PACKAGE):
+                os.mkdir(DEST_PACKAGE)
+            for DEST_PACKAGE_I in self.packageSet.keys():
+                DEST_PACKAGE_ROOT = os.path.join(
+                    DEST_PACKAGE,
+                    DEST_PACKAGE_I)
+                if not os.path.isdir(DEST_PACKAGE_ROOT):
+                    os.makedirs(DEST_PACKAGE_ROOT)
+        return 0
+
+    def __prepareSshDest(self,
+                         main,
+                         package,
+                         orphan):
+        raise NotImplementedError

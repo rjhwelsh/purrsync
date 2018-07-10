@@ -3,6 +3,8 @@
 # Copyright (c) 2018 Roger Welsh <rjhwelsh@gmail.com>
 
 import unittest
+import tempfile
+import os
 
 import parsync.Rsync as Rsync
 import parsync.FileSet as FileSet
@@ -28,3 +30,51 @@ class TestRsync(unittest.TestCase):
     def test_which(self):
         rs1 = Rsync.Rsync()
         self.assertEqual(rs1.which(), "/usr/bin/rsync")
+
+    def test_prepareDest(self):
+        with tempfile.TemporaryDirectory() as dest:
+            rs1 = Rsync.Rsync(destination=dest)
+            rs1.prepareDest()
+
+            # Test defaults
+            self.assertTrue(
+                os.path.isdir(
+                    os.path.join(dest,
+                                 rs1.MAIN,
+                                 rs1.ROOT)))
+
+            self.assertTrue(
+                os.path.isdir(
+                    os.path.join(dest,
+                                 rs1.ORPHAN,
+                                 rs1.ROOT)))
+            self.assertTrue(
+                os.path.isdir(
+                    os.path.join(dest,
+                                 rs1.PACKAGE)))
+
+            self.assertFalse(
+                os.listdir(
+                    os.path.join(
+                        dest,
+                        rs1.PACKAGE)))
+
+            # Test with packages
+            pkgname = 'somepackage'
+            catname = 'category'
+            rs2 = Rsync.Rsync(destination=dest,
+                              packageSet={pkgname:
+                                          FileSet.FileSet(),
+
+                                          os.sep.join([catname,
+                                                       pkgname]):
+                                          FileSet.FileSet()})
+            rs2.prepareDest()
+            pkgpath = os.path.join(dest, rs1.PACKAGE, pkgname)
+            catpath = os.path.join(dest, rs1.PACKAGE, catname)
+            catpkgpath = os.path.join(catpath, pkgname)
+
+            for i in [pkgpath, catpath, catpkgpath]:
+                self.assertTrue(
+                    os.path.isdir(
+                        i))
