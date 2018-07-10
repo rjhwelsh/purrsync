@@ -166,7 +166,7 @@ class PackageSource(dict):
         self.clear()
         self.pkglist = pkglist
         self.dirname = dirname
-        self.pkgfn = pkglist
+        self.pkgfn = pkgfn
         self.root = root
 
         # Initialize dict
