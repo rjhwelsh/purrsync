@@ -6,8 +6,8 @@ import os
 import argparse
 import subprocess as sp
 
-from . import FileSet
-from . import Rsync
+from purrsync import FileSet
+from purrsync import Rsync
 
 
 def main():

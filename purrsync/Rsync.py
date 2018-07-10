@@ -6,7 +6,7 @@ import subprocess as sp
 import os
 import tempfile
 
-from . import FileSet
+from purrsync import FileSet
 
 
 class Rsync:
