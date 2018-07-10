@@ -159,6 +159,16 @@ def main():
                                 packageSet=packageSet,
                                 rsyncBin=args.rsyncBin,
                                 rsyncArgs=args.rsyncArgs)
+    rsyncInstance.prepareDest()
+    rsyncInstance.rsyncMain()
+
+    if args.package:
+        for pkg, proc in rsyncInstance.rsyncPackages():
+            pass
+
+    if args.orphan:
+        rsyncInstance.rsyncOrphans()
+
 
 def updateIter(execstring):
     """ Generates an iterable for shell execstring. """
