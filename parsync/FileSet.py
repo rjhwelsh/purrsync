@@ -133,8 +133,10 @@ class FileSet(set):
 
     def __set__(self):
         """ Returns a plain set of FileSet. """
-        return set({self.__relpath(item)
-                    for item in self})
+        return set({
+            self.__relpath(
+                self.__path(item))
+            for item in self})
 
     def __or__(self, other):
         return self.union(other)
