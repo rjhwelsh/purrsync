@@ -83,17 +83,10 @@ class FileSet(set):
         norm_root = os.path.normpath(self.root)
         norm_path = os.path.normpath(pathstring)
 
-        norm_path_stripped = norm_path.lstrip(norm_root)
+        norm_path_ripped = removePrefix(
+            norm_path, norm_root)
 
-        if (len(norm_path_stripped) < len(norm_path)
-                or norm_root == os.sep):
-            return norm_path_stripped
-        else:
-            raise ValueError(
-                'Could not lstrip "{}" from "{}". Result="{}".'.format(
-                    norm_root,
-                    norm_path,
-                    norm_path_stripped))
+        return norm_path_ripped
 
     # Override Methods
     def union(self, *others):
@@ -207,10 +200,22 @@ class PackageSource(dict):
         for dirpath, dirnames, filenames in os.walk(self.dirname):
             for name in filenames:
                 fullname = os.path.join(dirpath, name)
-                name_stripped = fullname.lstrip(self.dirname)
-                if name_stripped not in self:
-                    self.add(name_stripped)
+                name_ripped = removePrefix(fullname, self.dirname)
+                if name_ripped not in self:
+                    self.add(name_ripped)
 
         # Read package data
         for pkgSet in self.values():
             pkgSet.read()
+
+
+def removePrefix(pathstring, root):
+    if pathstring.startswith(root):
+        return pathstring[len(root):]
+    elif root == os.sep:
+        # Exception for absroot
+        return pathstring
+    else:
+        raise ValueError(
+            '"{}" does not prefix "{}"'.format(
+                root, pathstring))
