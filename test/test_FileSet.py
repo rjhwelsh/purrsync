@@ -6,7 +6,7 @@ import unittest
 import tempfile
 import os
 import subprocess as sp
-import parsync.FileSet as FileSet
+import purrsync.FileSet as FileSet
 
 
 class TestFileSet(unittest.TestCase):

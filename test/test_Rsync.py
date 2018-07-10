@@ -6,8 +6,8 @@ import unittest
 import tempfile
 import os
 
-import parsync.Rsync as Rsync
-import parsync.FileSet as FileSet
+import purrsync.Rsync as Rsync
+import purrsync.FileSet as FileSet
 
 
 class TestRsync(unittest.TestCase):

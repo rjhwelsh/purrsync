@@ -7,7 +7,7 @@
 	:cron: as a2
 	:ssh: as a3
 
-	rectangle parsync {
+	rectangle purrsync {
 						( View config history ) as uc1
 						( by package ) as uc1.1
 						( by host ) as uc1.2

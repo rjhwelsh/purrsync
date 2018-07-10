@@ -1,6 +1,6 @@
-#+TITLE: Parsync - A wrapper for rsync 
+#+TITLE: Purrsync - A wrapper for rsync
 #+AUTHOR: Roger J. H. Welsh
 #+EMAIL: rjhwelsh@gmail.com
 * About
-=Parsync= is a adaptable rsync agent for extracting and synchronizing
-selections of files based on sets of file lists. 
+=Purrsync= is a adaptable rsync agent for extracting and synchronizing
+selections of files based on sets of file lists.
