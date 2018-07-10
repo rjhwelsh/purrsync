@@ -85,12 +85,15 @@ class FileSet(set):
 
         norm_path_stripped = norm_path.lstrip(norm_root)
 
-        if (norm_path_stripped < norm_path
+        if (len(norm_path_stripped) < len(norm_path)
                 or norm_root == os.sep):
             return norm_path_stripped
         else:
-            raise ValueError('Could not lstrip "{}" from "{}"'.format(
-                norm_root, norm_path))
+            raise ValueError(
+                'Could not lstrip "{}" from "{}". Result="{}".'.format(
+                    norm_root,
+                    norm_path,
+                    norm_path_stripped))
 
     # Override Methods
     def union(self, *others):
