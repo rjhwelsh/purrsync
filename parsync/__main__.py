@@ -159,7 +159,8 @@ def main():
                                 packageSet=packageSet,
                                 rsyncBin=args.rsync_bin,
                                 rsyncArgs=args.rsync_args)
-    rsyncInstance.prepareDest()
+    rsyncInstance.prepareDest(package=args.package,
+                              orphan=args.orphan)
     rsyncInstance.rsyncMain()
 
     if args.package:
