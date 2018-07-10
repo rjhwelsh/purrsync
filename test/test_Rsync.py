@@ -83,3 +83,98 @@ class TestRsync(unittest.TestCase):
             with self.assertRaises(NotImplementedError):
                 rs3 = Rsync.Rsync(destination="192.168.1.1:" + dest)
                 rs3.prepareDest()
+
+    def test_Rsync(self):
+        """ Tests the default use case for Rsync. """
+
+        with tempfile.TemporaryDirectory() as src1:
+            src = src1 + os.sep
+            # Temporary files
+            a = tempfile.NamedTemporaryFile(mode="r", dir=src, delete=False)
+            b = tempfile.NamedTemporaryFile(mode="r", dir=src, delete=False)
+            c = tempfile.NamedTemporaryFile(mode="r", dir=src, delete=False)
+            d = tempfile.NamedTemporaryFile(mode="r", dir=src, delete=False)
+
+            fileList = [FileSet.removePrefix(i.name, src)
+                        for i in [a, b, c, d]]
+
+            packageSet = {
+                "pkg_{}".format(key): FileSet.FileSet(setIter=[key],
+                                                      root=src)
+                for key in fileList[0:3]
+            }
+
+            ignoreSet = FileSet.FileSet(setIter=[fileList[2]],
+                                        root=src)
+
+            mainSet = FileSet.FileSet(setIter=fileList,
+                                      root=src)
+
+            with tempfile.TemporaryDirectory() as dest:
+                rs1 = Rsync.Rsync(src, dest,
+                                  mainSet=mainSet,
+                                  ignoreSet=ignoreSet,
+                                  packageSet=packageSet,
+                                  rsyncArgs="-v")
+                rs1.prepareDest()
+
+                rs1.rsyncMain()
+
+                destroot = os.path.join(
+                    dest,
+                    rs1.MAIN,
+                    rs1.ROOT)
+
+                self.assertTrue(
+                    os.path.exists(destroot),
+                    msg="{} does not exist!".format(
+                        destroot))
+
+                destfiles = [os.path.join(
+                    destroot,
+                    f)
+                    for f in fileList]
+
+                for df in destfiles[0:2] + [destfiles[3]]:
+                    self.assertTrue(
+                        os.path.exists(df),
+                        msg="{} does not exist!".format(
+                            df))
+
+                for pkg, proc in rs1.rsyncPackages():
+                    pass
+
+                pkgroot = os.path.join(dest, rs1.PACKAGE)
+
+                destroot = [
+                    os.path.join(
+                        pkgroot,
+                        'pkg_{}'.format(key),
+                        rs1.ROOT)
+                    for key in fileList[0:3]]
+
+                for i, d in enumerate(destroot):
+                    self.assertTrue(
+                        os.path.exists(d),
+                        msg="{} does not exist!".format(
+                            d))
+
+                    destfile = os.path.join(
+                        d,
+                        fileList[i])
+                    if i < 2:
+                        self.assertTrue(
+                            os.path.exists(destfile),
+                            msg="{} does not exist!".format(
+                                destfile))
+
+                rs1.rsyncOrphans()
+
+                orproot = os.path.join(dest, rs1.ORPHAN, rs1.ROOT)
+                orpfile = os.path.join(orproot, fileList[3])
+
+                self.assertTrue(
+                    os.path.exists(orproot))
+
+                self.assertTrue(
+                    os.path.exists(orpfile))
