@@ -2,5 +2,76 @@
 #+AUTHOR: Roger J. H. Welsh
 #+EMAIL: rjhwelsh@gmail.com
 * About
-=Purrsync= is a adaptable rsync agent for extracting and synchronizing
-selections of files based on sets of file lists.
+	=Purrsync= is an rsync wrapper for syncing files based on package collections.
+* Some Examples
+** Simple invocation
+ The simplest invocation is:
+ Synchronizing from a *MAINFILE* (file list) everything from *SRC* to *DEST*.
+ #+BEGIN_EXAMPLE sh
+ purrsync -m $MAINFILE $SRC $DEST
+ #+END_EXAMPLE
+
+ Here is a realistic example of the above.
+ #+BEGIN_SRC sh
+ mkdir -v /tmp/etc
+ cd /etc
+ find . > /tmp/mainfile
+ purrsync -m /tmp/mainfile /etc /tmp/etc
+ #+END_SRC
+** Ignore list
+
+An ignore file list can be used.
+#+BEGIN_SRC sh
+cd /etc
+find . > /tmp/mainfile
+find -iname \*.key > /tmp/ignorefile
+purrsync -m /tmp/mainfile -i /tmp/ignorefile /etc /tmp/etc
+#+END_SRC
+
+** Piping commands
+
+Instead of creating files, =purrsync= can run the commands for you.
+#+BEGIN_SRC sh
+cd /etc
+purrsync --main-exec "find" --ignore-exec "find -iname \*.key" /etc /tmp/etc
+#+END_SRC
+
+** Package sorting
+
+The main goal of this script was to sort backup configurations for packages on a
+per-package basis. On Gentoo this can be achieved with the following.
+
+#+BEGIN_SRC sh
+./purrsync/__main__.py -p -o -x "find /etc" -e "qlist {}" -L "qfile /etc | awk '{ print \$1 }'" / /tmp/etc
+#+END_SRC
+
+The =-p= flag is required for package sorting.
+The =-o= flag is for creating a special directory for orphaned files (without packages).
+The =-x= flag is synonymous with =--main-exec=.
+The =-e= flag runs ="qlist {}"= for every package, where ={}= is replaced with
+the package name.
+The =-L= flag runs ="qfile /etc | awk '{print \$1 }'"= on =/bin/sh= to get a
+list of the relevant packages. These names are fed into =qlist {}=.
+
+Only the set intersection between =-x= and =-e= are synchronized into the
+package destinations.
+
+
+* Destination Directory Structure
+
+The destination directory is structured as follows.
+
+ * *destination*
+	 - *main*
+		 - root
+	 - *orphan*
+		 - root
+	 - *pkg*
+		 - package_name
+			 - root
+
+The destination passed to =rsync= always ends in root.
+
+* Conclusions
+
+Have a nice day! :)
