@@ -54,9 +54,10 @@ class Rsync:
               ):
         """ Uses rsync to synchronize files based on filelists. """
         filesfrom = "--files-from=" + filelist
-        with sp.Popen([self.rsyncBin,
-                       self.rsyncArgs,
-                       filesfrom,
+
+        with sp.Popen([self.rsyncBin] +
+                      self.rsyncArgs.split() +
+                      [filesfrom,
                        src,
                        dest],
                       stdout=sp.PIPE) as proc:
