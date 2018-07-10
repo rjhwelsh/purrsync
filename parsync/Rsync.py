@@ -24,7 +24,7 @@ class Rsync:
                  ignoreSet=FileSet.FileSet(),
                  packageSet=dict(),
                  rsyncBin="",
-                 rsyncArgs=list()):
+                 rsyncArgs=""):
         """
         This class provides an interface to rsync w/ filesets.
         """
