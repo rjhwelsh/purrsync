@@ -6,7 +6,7 @@ import subprocess as sp
 import os
 import tempfile
 
-import FileSet
+from . import FileSet
 
 
 class Rsync:
