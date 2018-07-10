@@ -44,7 +44,7 @@ def main():
         action='store_true',
         help='Create a directory in DEST for packaged files.')
     parser.add_argument(
-        '-o', '--orphans',
+        '-o', '--orphan',
         action='store_true',
         help='Create a directory in DEST for orphaned files.\n' +
         '(files without packages)')
@@ -157,8 +157,8 @@ def main():
                                 mainSet=mainSet,
                                 ignoreSet=ignoreSet,
                                 packageSet=packageSet,
-                                rsyncBin=args.rsyncBin,
-                                rsyncArgs=args.rsyncArgs)
+                                rsyncBin=args.rsync_bin,
+                                rsyncArgs=args.rsync_args)
     rsyncInstance.prepareDest()
     rsyncInstance.rsyncMain()
 
