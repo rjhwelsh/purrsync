@@ -45,15 +45,15 @@ per-package basis. On Gentoo this can be achieved with the following.
 ./purrsync/__main__.py -p -o -x "find /etc" -e "qlist {}" -L "qfile /etc | awk '{ print \$1 }'" / /tmp/etc
 #+END_SRC
 
-The =-p= flag is required for package sorting.
-The =-o= flag is for creating a special directory for orphaned files (without packages).
-The =-x= flag is synonymous with =--main-exec=.
-The =-e= flag runs ="qlist {}"= for every package, where ={}= is replaced with
-the package name.
-The =-L= flag runs ="qfile /etc | awk '{print \$1 }'"= on =/bin/sh= to get a
-list of the relevant packages. These names are fed into =qlist {}=.
+- The =-p= flag is required for package sorting.
+- The =-o= flag is for creating a special directory for orphaned files (without packages).
+- The =-x= flag is synonymous with =--main-exec=.
+- The =-e= flag runs ="qlist {}"= for every package, where ={}= is replaced with
+  the package name.
+- The =-L= flag runs ="qfile /etc | awk '{print \$1 }'"= on =/bin/sh= to get a
+  list of the relevant packages. These names are fed into =qlist {}=.
 
-Only the set intersection between =-x= and =-e= are synchronized into the
+Only the /set intersection/ between =-x= and =-e= are synchronized into the
 package destinations.
 
 
