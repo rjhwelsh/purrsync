@@ -197,16 +197,19 @@ class PackageSource(dict):
         All files in dirname are considered to be packages file lists.
 
         """
+        if not isinstance(self.dirname, type(None)):
+            # Add packages from `dirname`
+            for dirpath, dirnames, filenames in os.walk(self.dirname):
+                for name in filenames:
+                    fullname = os.path.join(dirpath, name)
+                    name_ripped = removePrefix(fullname, self.dirname)
+                    if name_ripped not in self:
+                        self.add(name_ripped)
 
-        # Add packages from `dirname`
-        for dirpath, dirnames, filenames in os.walk(self.dirname):
-            for name in filenames:
-                fullname = os.path.join(dirpath, name)
-                name_ripped = removePrefix(fullname, self.dirname)
-                if name_ripped not in self:
-                    self.add(name_ripped)
+            # Read package data
+            for pkgSet in self.values():
+                pkgSet.read()
 
-        # Read package data
     def fnupdate(self):
         # Update packages
         for pkgSet in self.values():
