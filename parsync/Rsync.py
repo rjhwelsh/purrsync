@@ -164,7 +164,8 @@ class Rsync:
             for DEST_PACKAGE_I in self.packageSet.keys():
                 DEST_PACKAGE_ROOT = os.path.join(
                     DEST_PACKAGE,
-                    DEST_PACKAGE_I)
+                    DEST_PACKAGE_I,
+                    self.ROOT)
                 if not os.path.isdir(DEST_PACKAGE_ROOT):
                     os.makedirs(DEST_PACKAGE_ROOT)
         return 0
