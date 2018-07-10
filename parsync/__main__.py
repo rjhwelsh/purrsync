@@ -93,3 +93,11 @@ parser.add_argument(
 
 
 parser.parse_args()
+
+
+def main():
+    pass
+
+
+if __name__ == '__main__':
+    main()
