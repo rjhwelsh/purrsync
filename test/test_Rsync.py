@@ -78,3 +78,8 @@ class TestRsync(unittest.TestCase):
                 self.assertTrue(
                     os.path.isdir(
                         i))
+
+            # Test ssh not implemented
+            with self.assertRaises(NotImplementedError):
+                rs3 = Rsync.Rsync(destination="192.168.1.1:" + dest)
+                rs3.prepareDest()
