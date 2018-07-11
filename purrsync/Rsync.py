@@ -24,7 +24,8 @@ class Rsync:
                  ignoreSet=FileSet.FileSet(),
                  packageSet=dict(),
                  rsyncBin="",
-                 rsyncArgs=""):
+                 rsyncArgs="",
+                 backup_dir=None):
         """
         This class provides an interface to rsync w/ filesets.
         """
@@ -35,6 +36,7 @@ class Rsync:
         self.packageSet = packageSet
         self.rsyncArgs = rsyncArgs
         self.rsyncBin = rsyncBin
+        self.backup_dir = backup_dir
 
         # Override
         if not rsyncBin:
@@ -55,8 +57,18 @@ class Rsync:
         """ Uses rsync to synchronize files based on filelists. """
         filesfrom = "--files-from=" + filelist
 
+        backupArgs = []
+        if not isinstance(self.backup_dir,
+                          type(None)):
+            backupDir = os.path.join(
+                os.path.dirname(dest),
+                self.backup_dir)
+            backupArgs.append("--backup")
+            backupArgs.append("--backup-dir={}".format(backupDir))
+
         return sp.Popen([self.rsyncBin] +
                         self.rsyncArgs.split() +
+                        backupArgs +
                         [filesfrom,
                          src,
                          dest])
