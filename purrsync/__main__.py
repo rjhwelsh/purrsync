@@ -2,6 +2,7 @@
 
 # Copyright (c) 2018 Roger Welsh <rjhwelsh@gmail.com>
 
+import sys
 import os
 import argparse
 import subprocess as sp
@@ -129,6 +130,7 @@ def main():
         root = args.alt_root
 
     mainSet = FileSet.FileSet(
+        setIter=input_pipe(),
         filename=args.main_file,
         updatefn=main_update,
         root=root)
@@ -182,6 +184,15 @@ def updateIter(execstring):
             os.linesep).split(
                 os.linesep):
         yield item
+
+
+def input_pipe():
+    if not sys.stdin.isatty():
+        input_stream = sys.stdin
+        for line in input_stream:
+            yield(
+                line.rstrip(
+                    os.linesep))
 
 
 if __name__ == '__main__':
