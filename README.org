@@ -97,7 +97,7 @@ The destination directory is structured as follows.
 	 - *pkg*
 		 - package_name
 			 - root
-  		 - /backup-dir/
+			 - /backup-dir/
 
 The destination passed to =rsync= always ends in root.
 
