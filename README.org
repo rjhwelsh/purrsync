@@ -56,6 +56,20 @@ per-package basis. On Gentoo this can be achieved with the following.
 Only the /set intersection/ between =-x= and =-e= are synchronized into the
 package destinations.
 
+** Backup directory
+
+A backup directory can be given to =purrsync= relative to the =main=, =pkg= and
+=orphan= directories in the destination.
+#+BEGIN_SRC sh
+purrsync --backup-dir="backup-dir" -m FILELIST / /tmp/root
+#+END_SRC
+
+This can be used to create incremental backup snapshots.
+#+BEGIN_SRC sh
+purrsync --rsync-args="-u" -b "$(date +%F-%I%M%p-%Z)" -m FILELIST / /tmp/root
+#+END_SRC
+The =rsync= =-u= option specifies to only update the destination if files are
+newer on the source.
 
 * Destination Directory Structure
 
@@ -64,11 +78,14 @@ The destination directory is structured as follows.
  * *destination*
 	 - *main*
 		 - root
+		 - /backup-dir/
 	 - *orphan*
 		 - root
+		 - /backup-dir/
 	 - *pkg*
 		 - package_name
 			 - root
+  		 - /backup-dir/
 
 The destination passed to =rsync= always ends in root.
 
