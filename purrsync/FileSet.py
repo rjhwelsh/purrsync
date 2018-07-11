@@ -225,6 +225,9 @@ def removePrefix(pathstring, root):
     elif root == os.sep:
         # Exception for absroot
         return pathstring
+    elif root == ".":
+        # Exception for relative paths.
+        return pathstring
     else:
         raise ValueError(
             '"{}" does not prefix "{}"'.format(
