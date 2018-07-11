@@ -42,7 +42,7 @@ The main goal of this script was to sort backup configurations for packages on a
 per-package basis. On Gentoo this can be achieved with the following.
 
 #+BEGIN_SRC sh
-./purrsync/__main__.py -p -o -x "find /etc" -e "qlist {}" -L "qfile /etc | awk '{ print \$1 }'" / /tmp/etc
+purrsync -p -o -x "find /etc" -e "qlist {}" -L "qfile /etc | awk '{ print \$1 }'" / /tmp/etc
 #+END_SRC
 
 - The =-p= flag is required for package sorting.
