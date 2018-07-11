@@ -56,6 +56,18 @@ per-package basis. On Gentoo this can be achieved with the following.
 Only the /set intersection/ between =-x= and =-e= are synchronized into the
 package destinations.
 
+** Arguments for =rsync=
+Arguments can be passed to =rsync=.
+#+BEGIN_SRC sh
+purrsync -m FILELIST --rsync-args="-v" / /tmp/root
+#+END_SRC
+
+The path to the =rsync= binary can be specified,
+#+BEGIN_SRC sh
+purrsync -m FILELIST --rsync-bin="/usr/bin/rsync" / /tmp/root
+#+END_SRC
+by default =purrsync= uses the =which= command to find the location of =rsync=.
+
 ** Backup directory
 
 A backup directory can be given to =purrsync= relative to the =main=, =pkg= and
