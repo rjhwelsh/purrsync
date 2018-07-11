@@ -103,4 +103,9 @@ The destination passed to =rsync= always ends in root.
 
 * Conclusions
 
+I hope this has been a helpful guide.
+
+If you have any suggestions, comments or would like to submit a PR, please be in
+touch.
+
 Have a nice day! :)
