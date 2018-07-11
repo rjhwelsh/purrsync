@@ -87,6 +87,13 @@ def main():
         nargs='?',
         help='Use alternative root, instead of SRC for filelists.')
     parser.add_argument(
+        '-b', '--backup-dir',
+        metavar='BACKUP_DIR',
+        type=str,
+        nargs='?',
+        help='Make backups into directory relative to MAIN/PKG/ORPHAN.\n' +
+        'Adds rsync args "--backup --backup-dir=BACKUP_DIR"\n')
+    parser.add_argument(
         '-A', '--rsync-args',
         metavar='RSYNC_ARGS',
         type=str,
@@ -160,7 +167,8 @@ def main():
                                 ignoreSet=ignoreSet,
                                 packageSet=packageSet,
                                 rsyncBin=args.rsync_bin,
-                                rsyncArgs=args.rsync_args)
+                                rsyncArgs=args.rsync_args,
+                                backup_dir=args.backup_dir)
     rsyncInstance.prepareDest(package=args.package,
                               orphan=args.orphan)
     rsyncInstance.rsyncMain()
